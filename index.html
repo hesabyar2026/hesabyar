@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123d32">
+  <title>حساب‌یار پدر</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>حساب‌یار</h1>
+    <p>مدیریت دخل و خرج روزانه</p>
+  </div>
+  <span id="today"></span>
+</header>
+
+<nav class="nav">
+  <button class="active" data-page="home">خانه</button>
+  <button data-page="add">ثبت تراکنش</button>
+  <button data-page="history">تاریخچه</button>
+  <button data-page="report">گزارش‌ها</button>
+  <button data-page="backup">پشتیبان</button>
+</nav>
+
+<main>
+
+<section id="home" class="page active">
+  <h2>داشبورد مالی</h2>
+
+  <div class="cards">
+    <div class="summary green">
+      <span>درآمد امروز</span>
+      <strong id="todayIncome">۰</strong>
+      <small>تومان</small>
+    </div>
+    <div class="summary red">
+      <span>هزینه امروز</span>
+      <strong id="todayExpense">۰</strong>
+      <small>تومان</small>
+    </div>
+    <div class="summary blue">
+      <span>درآمد نقدی امروز</span>
+      <strong id="todayCash">۰</strong>
+      <small>تومان</small>
+    </div>
+    <div class="summary purple">
+      <span>واریزی کارت امروز</span>
+      <strong id="todayCard">۰</strong>
+      <small>تومان</small>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>مانده امروز</h3>
+    <strong id="todayBalance" class="big">۰ تومان</strong>
+  </div>
+
+  <div class="panel">
+    <h3>موجودی کارت‌های بانکی</h3>
+    <div id="bankBalances"></div>
+  </div>
+
+  <div class="panel">
+    <h3>آخرین تراکنش‌ها</h3>
+    <div id="recent"></div>
+  </div>
+</section>
+
+<section id="add" class="page">
+  <h2>ثبت اطلاعات مالی</h2>
+
+  <div class="tabs">
+    <button class="active" data-form="incomeForm">درآمد</button>
+    <button data-form="expenseForm">هزینه</button>
+    <button data-form="transferForm">انتقال وجه</button>
+    <button data-form="openingForm">موجودی اولیه</button>
+  </div>
+
+  <form id="incomeForm" class="entry-form">
+    <h3>ثبت درآمد جدید</h3>
+
+    <label>مبلغ (تومان)</label>
+    <input type="number" id="incomeAmount" min="1" required>
+
+    <label>روش دریافت</label>
+    <select id="incomeMethod">
+      <option value="cash">نقدی</option>
+      <option value="card">واریزی به کارت</option>
+    </select>
+
+    <div id="incomeBankBox" hidden>
+      <label>کارت مقصد</label>
+      <select id="incomeBank"></select>
+    </div>
+
+    <label>بابت چه چیزی؟</label>
+    <input id="incomeTitle" placeholder="مثلاً فروش یا خدمات" required>
+
+    <label>توضیحات (اختیاری)</label>
+    <textarea id="incomeNote"></textarea>
+
+    <button class="submit greenBtn">ثبت درآمد</button>
+  </form>
+
+  <form id="expenseForm" class="entry-form" hidden>
+    <h3>ثبت هزینه جدید</h3>
+
+    <label>مبلغ (تومان)</label>
+    <input type="number" id="expenseAmount" min="1" required>
+
+    <label>روش پرداخت</label>
+    <select id="expenseMethod">
+      <option value="cash">نقدی</option>
+      <option value="card">کارت بانکی</option>
+    </select>
+
+    <div id="expenseBankBox" hidden>
+      <label>کارت پرداخت‌کننده</label>
+      <select id="expenseBank"></select>
+    </div>
+
+    <label>دسته‌بندی هزینه</label>
+    <select id="expenseCategory">
+      <option>خوراک و مواد غذایی</option>
+      <option>خرید وسایل</option>
+      <option>قبوض</option>
+      <option>رفت‌وآمد</option>
+      <option>درمان</option>
+      <option>خانواده</option>
+      <option>سایر</option>
+    </select>
+
+    <label>خرج بابت چه چیزی بوده؟</label>
+    <input id="expenseTitle" placeholder="مثلاً خرید نان" required>
+
+    <label>توضیحات</label>
+    <textarea id="expenseNote"></textarea>
+
+    <button class="submit redBtn">ثبت هزینه</button>
+  </form>
+
+  <form id="transferForm" class="entry-form" hidden>
+    <h3>انتقال بین کارت‌ها</h3>
+
+    <label>مبلغ انتقال (تومان)</label>
+    <input type="number" id="transferAmount" min="1" required>
+
+    <label>از کارت</label>
+    <select id="transferFrom"></select>
+
+    <label>به کارت</label>
+    <select id="transferTo"></select>
+
+    <label>توضیحات</label>
+    <input id="transferNote" placeholder="مثلاً انتقال وجه">
+
+    <button class="submit blueBtn">ثبت انتقال</button>
+    <p class="hint">انتقال بین کارت‌های خود پدر درآمد یا هزینه محسوب نمی‌شود.</p>
+  </form>
+
+  <form id="openingForm" class="entry-form" hidden>
+    <h3>ثبت موجودی اولیه</h3>
+    <label>حساب موردنظر</label>
+    <select id="openingAccount">
+      <option value="cash">پول نقد</option>
+      <option value="bank">کارت بانکی</option>
+    </select>
+
+    <div id="openingBankBox" hidden>
+      <label>نام بانک</label>
+      <select id="openingBank"></select>
+    </div>
+
+    <label>موجودی فعلی (تومان)</label>
+    <input type="number" id="openingAmount" min="0" required>
+
+    <button class="submit blueBtn">ثبت موجودی اولیه</button>
+    <p class="hint">این موجودی، درآمد جدید محسوب نمی‌شود.</p>
+  </form>
+</section>
+
+<section id="history" class="page">
+  <h2>تاریخچه تراکنش‌ها</h2>
+  <label>جست‌وجو</label>
+  <input id="search" placeholder="نام، مبلغ یا توضیحات...">
+  <label>فیلتر نوع</label>
+  <select id="filter">
+    <option value="all">همه تراکنش‌ها</option>
+    <option value="income">درآمد</option>
+    <option value="expense">هزینه</option>
+    <option value="transfer">انتقال</option>
+    <option value="opening">موجودی اولیه</option>
+  </select>
+  <div id="historyList"></div>
+</section>
+
+<section id="report" class="page">
+  <h2>گزارش مالی</h2>
+  <label>ماه گزارش</label>
+  <input type="month" id="reportMonth">
+
+  <div class="panel">
+    <p>مجموع درآمد ماه</p>
+    <strong class="greenText" id="monthIncome">۰</strong>
+    <p>مجموع هزینه ماه</p>
+    <strong class="redText" id="monthExpense">۰</strong>
+    <hr>
+    <p>مانده خالص ماه</p>
+    <strong id="monthBalance" class="big">۰</strong>
+  </div>
+
+  <div class="panel">
+    <h3>جزئیات درآمد</h3>
+    <p>نقدی: <strong id="monthCash">۰</strong></p>
+    <p>کارت: <strong id="monthCard">۰</strong></p>
+  </div>
+
+  <button class="submit blueBtn" id="exportReport">
+    دریافت گزارش ماهانه
+  </button>
+</section>
+
+<section id="backup" class="page">
+  <h2>پشتیبان اطلاعات</h2>
+  <div class="panel">
+    <h3>ذخیره اطلاعات</h3>
+    <p>از تمام اطلاعات حساب‌یار یک فایل پشتیبان تهیه کن.</p>
+    <button class="submit greenBtn" id="backupBtn">
+      دانلود نسخه پشتیبان
+    </button>
+  </div>
+
+  <div class="panel">
+    <h3>بازیابی اطلاعات</h3>
+    <p>فایل پشتیبان قبلی را انتخاب کن.</p>
+    <input type="file" id="restoreFile" accept=".json">
+    <button class="submit blueBtn" id="restoreBtn">
+      بازیابی اطلاعات
+    </button>
+  </div>
+  <p class="hint">پیشنهاد: هر چند روز یک بار نسخه پشتیبان بگیر و آن را در جای امن دیگری نگه دار.</p>
+</section>
+
+</main>
+
+<footer>حساب‌یار پدر | نسخه ۱.۰</footer>
+
+<script src="script.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js")
+            .then(() => console.log("حساب‌یار آماده اجرای آفلاین است"))
+            .catch(error => console.error("خطا:", error));
+    });
+}
+</script>
+</body>
+</html>
