@@ -1,0 +1,15 @@
+
+{
+  "name": "حساب‌یار پدر",
+  "short_name": "حساب‌یار",
+  "description": "برنامه مدیریت درآمد و هزینه روزانه",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7fa",
+  "theme_color": "#2563eb",
+  "icons": []
+}
